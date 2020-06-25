@@ -28,8 +28,8 @@ pcare <- pcare %>%
   filter(!(state %in% c("DC", "PR"))) %>%
   rename(long2 = Long_) %>%
   rename(lat2 = Lat) %>%
-  mutate(LogCases = log10(`6/4/2020`)) %>% 
-  filter(`6/4/2020` > 0) %>%
+  mutate(LogCases = log10(`6/21/2020`)) %>% 
+  filter(`6/21/2020` > 0) %>%
   filter(lat2 > 25 & lat2 < 50 & long2 > -130 & long2 < -65) 
 
 # covid:
@@ -58,18 +58,21 @@ ggplot() +
   geom_polygon(data = state_data,
                aes(x = long, y = lat, group = group, fill = PercentOver60),
                color = "black") +
-  scale_fill_gradient("Percentage of Ophthalmologists over 60", low = "lightblue", high = "darkblue", 
+  scale_fill_gradient("% Ophthalmologists > 60", low = "antiquewhite1", high = "darkblue", 
                       breaks = c(30,35,40,45), labels=c("30%","35%","40%", "45%"), na.value="black") +
   # scale_fill_gradient("Ophthalmologists > 60 years old (%)", low = "white", high = "red", na.value="white") +
   # bubbles w/ log(COVID cases)
   geom_point(data = state_data,
-             aes(x = long2, y = lat2, size = LogCases),
+             aes(x = long2, y = lat2, size = `6/21/2020`),
              colour = "firebrick2", alpha = 0.9, shape = 20) +
   scale_size_continuous("COVID-19 Cases",
-                        range = c(0, 7),
-                        labels = c("1-9", "10-99", "100-999",
-                                   "1000-9999", "10000-99999",
-                                   ">100000")) +
+                        range = c(1, 3),
+                        labels = c("100k", "200k", "300k")) +
+
+  # ,
+                   # labels = c("1-9", "10-99", "100-999",
+                   #                 "1000-9999", "10000-99999",
+                   #                 ">100000")
   # remove elements we don't need
   theme(axis.title = element_blank(),
         axis.text = element_blank(),
